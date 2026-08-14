@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Panel de administrador — La cafetería de Bruno</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div class="admin-shell" id="loginView">
+  <div class="admin-login">
+    <span class="eyebrow">Solo personal de Bruno</span>
+    <h1>Panel de administrador</h1>
+    <p>Inicia sesión para editar el menú, el horario y la calificación del sitio.</p>
+
+    <div id="configWarning" class="form-msg error hidden" style="margin-bottom:16px;">
+      Firebase todavía no está configurado (ver <code>README.md</code>). Puedes explorar el panel en modo vista previa, pero los cambios no se guardarán para tus visitantes.
+    </div>
+
+    <form id="loginForm">
+      <div class="field">
+        <label for="loginEmail">Correo</label>
+        <input type="email" id="loginEmail" required autocomplete="username" />
+      </div>
+      <div class="field">
+        <label for="loginPassword">Contraseña</label>
+        <input type="password" id="loginPassword" required autocomplete="current-password" />
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Entrar</button>
+      <div id="loginMsg" class="form-msg"></div>
+    </form>
+
+    <button type="button" id="previewBtn" class="btn btn-ghost" style="width:100%; justify-content:center; margin-top:10px;">
+      Vista previa local (sin guardar)
+    </button>
+
+    <p style="margin-top:22px;"><a href="index.html" style="font-size:.82rem; color:var(--taupe);">← Volver al sitio</a></p>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div class="admin-app" id="appView">
+  <div class="admin-topbar">
+    <div class="container">
+      <div class="brand" style="font-size:1rem;">
+        <span class="brand-mark" style="width:28px; height:28px;"><img src="assets/img/logo.jpeg" alt="Logo de La cafetería de Bruno" /></span>
+        Panel de Bruno
+      </div>
+      <div style="display:flex; align-items:center; gap:14px;">
+        <span class="status-pill" id="statusPill">—</span>
+        <button type="button" id="logoutBtn" class="btn btn-ghost" style="padding:.5em 1.1em;">Salir</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="admin-main">
+    <div class="container">
+
+      <!-- Horario y calificación -->
+      <section class="admin-section">
+        <h2>Horario y calificación</h2>
+        <p class="hint">Estos datos se muestran en la página de Contacto.</p>
+
+        <div id="scheduleList"></div>
+        <button type="button" id="addScheduleBtn" class="admin-add-cat" style="margin-bottom:22px;">+ Agregar renglón de horario</button>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="ratingValue">Calificación (0 a 5)</label>
+            <input type="number" id="ratingValue" step="0.1" min="0" max="5" placeholder="Ej. 4.8" />
+          </div>
+          <div class="field">
+            <label for="ratingCount">Número de reseñas</label>
+            <input type="number" id="ratingCount" min="0" placeholder="Ej. 132" />
+          </div>
+        </div>
+        <p class="hint">Consulta estos dos datos directamente en tu ficha de Google Maps y actualízalos aquí cuando cambien.</p>
+
+        <button type="button" id="saveSettingsBtn" class="btn btn-primary">Guardar horario y calificación</button>
+        <div id="settingsMsg" class="form-msg"></div>
+      </section>
+
+      <!-- Menú -->
+      <section class="admin-section">
+        <h2>Menú</h2>
+        <p class="hint">Edita nombres, precios y notas. El campo "grupo" es opcional (por ejemplo "Chilaquiles" o "Huevos al gusto") y agrupa productos bajo un mismo subtítulo.</p>
+
+        <button type="button" id="seedBtn" class="admin-add-cat" style="margin-bottom:20px;">↺ Cargar menú inicial desde data/menu.json (solo la primera vez)</button>
+
+        <div id="catsWrap"></div>
+        <button type="button" id="addCatBtn" class="admin-add-cat">+ Agregar categoría</button>
+
+        <div style="margin-top:22px;">
+          <button type="button" id="saveMenuBtn" class="btn btn-primary">Guardar menú</button>
+          <div id="menuMsg" class="form-msg"></div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script type="module" src="assets/js/admin.js"></script>
+</body>
+</html>
