@@ -1,48 +1,65 @@
-import { loadSettings } from "./data.js";
+// ==========================================================================
+// La cafetería de Bruno — comportamiento compartido de todas las páginas
+// ==========================================================================
 
-const hoursEl = document.getElementById("hoursList");
-const ratingScoreEl = document.getElementById("ratingScore");
-const ratingStarsEl = document.getElementById("ratingStars");
-const ratingCountEl = document.getElementById("ratingCount");
-const mapLinkEls = document.querySelectorAll("[data-maps-link]");
-const mapEmbedEl = document.getElementById("mapEmbed");
-const igLinkEls = document.querySelectorAll("[data-instagram-link]");
-const igHandleEls = document.querySelectorAll("[data-instagram-handle]");
+(function(){
+  const WHATSAPP_NUMBER = "5215624015127"; // +52 1 56 2401 5127
 
-function starIcon(filled){
-  return `<svg viewBox="0 0 20 20" fill="${filled ? "currentColor" : "none"}" stroke="currentColor" stroke-width="1.4">
-    <path stroke-linejoin="round" d="M10 1.8l2.47 5.13 5.53.62-4.1 3.83 1.14 5.52L10 14.9l-4.94 2.99 1.14-5.52-4.1-3.83 5.53-.62L10 1.8z"/>
-  </svg>`;
-}
-
-(async function init(){
-  const settings = await loadSettings();
-
-  // Horario
-  if (hoursEl && settings.schedule){
-    hoursEl.innerHTML = settings.schedule.map(s => `
-      <div class="hours-row"><span>${s.day}</span><span>${s.hours}</span></div>
-    `).join("");
+  function buildWhatsappLink(message){
+    const base = `https://wa.me/${WHATSAPP_NUMBER}`;
+    return message ? `${base}?text=${encodeURIComponent(message)}` : base;
   }
 
-  // Calificación
-  const rating = settings.rating || {};
-  if (rating.value){
-    ratingScoreEl.textContent = rating.value.toFixed ? rating.value.toFixed(1) : rating.value;
-    const full = Math.round(rating.value);
-    ratingStarsEl.innerHTML = Array.from({ length: 5 }, (_, i) => starIcon(i < full)).join("");
-    ratingCountEl.textContent = rating.count ? `Basado en ${rating.count} reseñas de Google` : "Reseñas de Google";
+  document.querySelectorAll("[data-whatsapp]").forEach(el => {
+    const msg = el.getAttribute("data-whatsapp-msg") || "Hola, quisiera más información de La cafetería de Bruno.";
+    el.setAttribute("href", buildWhatsappLink(msg));
+    el.setAttribute("target", "_blank");
+    el.setAttribute("rel", "noopener");
+  });
+
+  // ---------- Header: fondo sólido al hacer scroll ----------
+  const header = document.querySelector(".site-header");
+  if (header){
+    const onScroll = () => {
+      header.classList.toggle("is-scrolled", window.scrollY > 24);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+  }
+
+  // ---------- Menú móvil ----------
+  const toggle = document.querySelector(".nav-toggle");
+  const nav = document.querySelector(".site-nav");
+  if (toggle && nav){
+    toggle.addEventListener("click", () => {
+      const open = nav.classList.toggle("is-open");
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    nav.querySelectorAll("a").forEach(a => {
+      a.addEventListener("click", () => nav.classList.remove("is-open"));
+    });
+  }
+
+  // ---------- Reveal al hacer scroll ----------
+  const revealEls = document.querySelectorAll(".reveal");
+  if ("IntersectionObserver" in window && revealEls.length){
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting){
+          entry.target.classList.add("is-visible");
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.14, rootMargin: "0px 0px -40px 0px" });
+    revealEls.forEach(el => io.observe(el));
   } else {
-    ratingScoreEl.textContent = "—";
-    ratingStarsEl.innerHTML = Array.from({ length: 5 }, () => starIcon(false)).join("");
-    ratingCountEl.textContent = "Aún sin calificación publicada";
+    revealEls.forEach(el => el.classList.add("is-visible"));
   }
 
-  // Enlaces de mapa e Instagram
-  mapLinkEls.forEach(el => el.setAttribute("href", settings.mapsUrl));
-  if (mapEmbedEl && settings.mapsEmbedQuery){
-    mapEmbedEl.setAttribute("src", `https://www.google.com/maps?q=${encodeURIComponent(settings.mapsEmbedQuery)}&output=embed`);
-  }
-  igLinkEls.forEach(el => el.setAttribute("href", `https://instagram.com/${settings.instagram}`));
-  igHandleEls.forEach(el => el.textContent = `@${settings.instagram}`);
+  // ---------- Año en footer ----------
+  const yearEl = document.querySelector("[data-year]");
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  window.BrunoSite = window.BrunoSite || {};
+  window.BrunoSite.buildWhatsappLink = buildWhatsappLink;
 })();

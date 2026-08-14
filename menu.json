@@ -1,86 +1,555 @@
-import { loadMenu } from "./data.js";
-
-const listEl = document.getElementById("menuCategories");
-const searchInput = document.getElementById("menuSearch");
-
-function slug(str){
-  return str.toLowerCase()
-    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-}
-
-function productRow(p){
-  const notes = p.notes ? `<span class="menu-row-notes">${p.notes}</span>` : "";
-  return `
-    <div class="menu-row" data-search="${(p.name + " " + (p.notes||"")).toLowerCase()}">
-      <div class="menu-row-name">${p.name}${notes}</div>
-      <div class="menu-row-price">${p.price}</div>
-    </div>`;
-}
-
-function renderCategory(cat){
-  const id = slug(cat.category);
-  const blocks = cat.items.map(item => {
-    if (item.subcategory){
-      return `
-        <h3 class="menu-sub">${item.subcategory}</h3>
-        <div class="menu-list">${item.products.map(productRow).join("")}</div>`;
+{
+  "categories": [
+    {
+      "category": "Desayunos Mexicanos",
+      "items": [
+        {
+          "name": "Enchiladas verdes / Pollo",
+          "price": "$105"
+        },
+        {
+          "name": "Suizas",
+          "price": "$120"
+        },
+        {
+          "subcategory": "Huevos al Gusto",
+          "products": [
+            {
+              "name": "A la mexicana",
+              "price": "$99"
+            },
+            {
+              "name": "Jamón/salchicha/tocino",
+              "price": "$99"
+            },
+            {
+              "name": "Rancheros",
+              "price": "$110"
+            }
+          ]
+        },
+        {
+          "subcategory": "Chilaquiles",
+          "products": [
+            {
+              "name": "Chilaquiles sencillos",
+              "price": "$75"
+            },
+            {
+              "name": "Chilaquiles con huevo",
+              "price": "$85"
+            },
+            {
+              "name": "Chilaquiles con pollo deshebrado",
+              "price": "$100"
+            },
+            {
+              "name": "Chilaquiles con pechuga a la plancha",
+              "price": "$115"
+            },
+            {
+              "name": "Chilaquiles con chorizo",
+              "price": "$115"
+            },
+            {
+              "name": "Torta de chilaquiles",
+              "price": "$75"
+            }
+          ]
+        },
+        {
+          "name": "Combo con café americano",
+          "price": "$95"
+        },
+        {
+          "name": "Chilaquiles sencillos",
+          "price": "$115"
+        },
+        {
+          "name": "Chilaquiles con huevo",
+          "price": "$125"
+        },
+        {
+          "name": "Chilaquiles con pollo deshebrado",
+          "price": "$125"
+        },
+        {
+          "name": "Chilaquiles con pechuga a la plancha",
+          "price": "$135"
+        },
+        {
+          "name": "Torta de chilaquiles",
+          "price": "$140"
+        },
+        {
+          "subcategory": "Molletes",
+          "products": [
+            {
+              "name": "Mollete tradicional",
+              "price": "$80"
+            },
+            {
+              "name": "Mollete con jamón o tocino",
+              "price": "$90"
+            },
+            {
+              "name": "Mollete con chilaquiles",
+              "price": "$85"
+            },
+            {
+              "name": "Mollete con chilaquiles con pollo",
+              "price": "$100"
+            }
+          ]
+        },
+        {
+          "name": "Sincronizadas (2 piezas)",
+          "price": "$90",
+          "notes": "Guacamole y frijoles"
+        },
+        {
+          "subcategory": "Wafles Clásicos",
+          "products": [
+            {
+              "name": "Clásicos",
+              "price": "$95",
+              "notes": "Tocino, miel de abeja y mantequilla"
+            }
+          ]
+        },
+        {
+          "subcategory": "Wafles Leñador",
+          "products": [
+            {
+              "name": "Leñador",
+              "price": "$100",
+              "notes": "Tocino, huevo y miel de arce"
+            }
+          ]
+        },
+        {
+          "name": "Combo con café americano (16 oz)",
+          "price": "$135"
+        },
+        {
+          "subcategory": "Wafles de Frutos Rojos",
+          "products": [
+            {
+              "name": "Frutos rojos",
+              "price": "$110",
+              "notes": "Extra: Lechera/Nutella/Chocolate +$10"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Sándwiches y Pan",
+      "items": [
+        {
+          "name": "Sándwich clásico",
+          "price": "$65"
+        },
+        {
+          "name": "Sándwich de milanesa sencilla",
+          "price": "$85"
+        },
+        {
+          "name": "Sándwich de milanesa con aguacate",
+          "price": "$99"
+        },
+        {
+          "name": "Jamón y queso",
+          "price": "$75"
+        },
+        {
+          "subcategory": "Panini & Ciabatta",
+          "products": [
+            {
+              "name": "Pechuga a las finas hierbas",
+              "price": "$125",
+              "notes": "Pan de masa madre"
+            },
+            {
+              "name": "Pechuga chipotle",
+              "price": "$125",
+              "notes": "Pan de masa madre"
+            }
+          ]
+        },
+        {
+          "subcategory": "Normal / Pesto",
+          "products": [
+            {
+              "name": "Jamón / queso manchego",
+              "price": "$85/$95"
+            },
+            {
+              "name": "Milanesa / queso manchego",
+              "price": "$95/$105"
+            },
+            {
+              "name": "Aguacate, jitomate, queso manchego",
+              "price": "$105/$115"
+            }
+          ]
+        },
+        {
+          "name": "Extra: Aderezo cremoso fuego",
+          "price": "+$10"
+        }
+      ]
+    },
+    {
+      "category": "Desayunos Ligeros",
+      "items": [
+        {
+          "name": "Aguacate tradicional",
+          "price": "$70"
+        },
+        {
+          "name": "Aguacate toast especial",
+          "price": "$110",
+          "notes": "Extra: aguacate, jitomate, tomate cherry, semillas y miel"
+        },
+        {
+          "name": "Pan francés clásico",
+          "price": "$115",
+          "notes": "Con miel de abeja y mantequilla"
+        },
+        {
+          "name": "Pan francés de la casa",
+          "price": "$135",
+          "notes": "Con frutas de temporada y miel"
+        },
+        {
+          "name": "Desayuno americano",
+          "price": "$130"
+        }
+      ]
+    },
+    {
+      "category": "Bebidas Calientes",
+      "items": [
+        {
+          "name": "Café de grano (12 oz)",
+          "price": "$45"
+        },
+        {
+          "name": "Café de grano (16 oz)",
+          "price": "$55"
+        },
+        {
+          "name": "Capuchino 12oz / 16oz",
+          "price": "$55/$60"
+        },
+        {
+          "name": "Latte 12oz / 16oz",
+          "price": "$55/$60"
+        },
+        {
+          "name": "Capuchino vainilla 12oz / 16oz",
+          "price": "$55/$65"
+        },
+        {
+          "name": "Mocaccino 12oz / 16oz",
+          "price": "$55/$65"
+        },
+        {
+          "name": "Chocolate 12oz / 16oz",
+          "price": "$55/$65"
+        },
+        {
+          "name": "Chai latte 12oz / 16oz",
+          "price": "$65/$70"
+        },
+        {
+          "name": "Dirty chai latte 12oz / 16oz",
+          "price": "$60/$80"
+        },
+        {
+          "name": "Descafeinado 12oz / 16oz",
+          "price": "$35/$45"
+        },
+        {
+          "name": "Té / Infusiones 12oz / 16oz",
+          "price": "$35/$40"
+        }
+      ]
+    },
+    {
+      "category": "Desayunos Clásicos",
+      "items": [
+        {
+          "name": "Huevos a la mexicana",
+          "price": "$115"
+        },
+        {
+          "name": "Huevos jamón",
+          "price": "$115"
+        },
+        {
+          "name": "Huevos salchicha",
+          "price": "$115"
+        },
+        {
+          "name": "Huevos tocino",
+          "price": "$115"
+        },
+        {
+          "name": "Huevos rancheros",
+          "price": "$135",
+          "notes": "Acompañado de frijoles refritos y pan tostado"
+        },
+        {
+          "name": "Omelette jamón/queso",
+          "price": "$125",
+          "notes": "Acompañado de frijoles refritos y pan tostado"
+        },
+        {
+          "name": "Omelette espinaca/queso",
+          "price": "$125",
+          "notes": "Acompañado de frijoles refritos y pan tostado"
+        },
+        {
+          "name": "Extra aderezo cremoso fuego",
+          "price": "+$10"
+        },
+        {
+          "subcategory": "Chilaquiles",
+          "products": [
+            {
+              "name": "Con 1 huevo",
+              "price": "$115",
+              "notes": "Acompañado de frijoles refritos y pan tostado"
+            },
+            {
+              "name": "Pechuga de pollo",
+              "price": "$135",
+              "notes": "Acompañado de frijoles refritos y pan tostado"
+            },
+            {
+              "name": "Pechuga de pollo a la plancha",
+              "price": "$155",
+              "notes": "Acompañado de frijoles refritos y pan tostado"
+            },
+            {
+              "name": "Arrachera",
+              "price": "$155",
+              "notes": "Acompañado de frijoles refritos y pan tostado"
+            },
+            {
+              "name": "Chorizo",
+              "price": "$135",
+              "notes": "Acompañado de frijoles refritos y pan tostado"
+            }
+          ]
+        },
+        {
+          "subcategory": "Enchiladas",
+          "products": [
+            {
+              "name": "Verdes",
+              "price": "$135",
+              "notes": "Acompañadas de frijoles refritos y pan tostado"
+            },
+            {
+              "name": "Suizas",
+              "price": "$145",
+              "notes": "Acompañadas de frijoles refritos y pan tostado"
+            }
+          ]
+        },
+        {
+          "subcategory": "Molletes",
+          "products": [
+            {
+              "name": "Sencillos",
+              "price": "$115"
+            },
+            {
+              "name": "Jamón/tocino",
+              "price": "$125"
+            },
+            {
+              "name": "Chilaquiles sencillos",
+              "price": "$125"
+            },
+            {
+              "name": "Con chilaquiles y pollo",
+              "price": "$135"
+            }
+          ]
+        },
+        {
+          "subcategory": "Waffles",
+          "products": [
+            {
+              "name": "Clásicos",
+              "price": "$135",
+              "notes": "Tocino, mantequilla y jarabe de arce"
+            },
+            {
+              "name": "Leñador",
+              "price": "$145",
+              "notes": "Tocino, huevo y jarabe de arce"
+            },
+            {
+              "name": "Desayuno americano",
+              "price": "$145",
+              "notes": "Dos hot cakes, huevo y tocino"
+            }
+          ]
+        },
+        {
+          "name": "Incluye fruta fresca + café americano o té",
+          "price": "-"
+        },
+        {
+          "name": "Mejora: capuchino/latte cremoso",
+          "price": "+$25/+$30"
+        },
+        {
+          "name": "Especial: vainilla cremosa/mocaccino",
+          "price": "+$35/+$35"
+        }
+      ]
+    },
+    {
+      "category": "Sugerencias de la Casa",
+      "items": [
+        {
+          "name": "Aguacate toast tradicional + jugo natural (16oz)",
+          "price": "$124"
+        },
+        {
+          "name": "Extra aguacate toast especial",
+          "price": "+$20"
+        },
+        {
+          "name": "Extra jugo especial de la casa",
+          "price": "+$10"
+        },
+        {
+          "name": "Pan francés sencillo + jugo natural",
+          "price": "$155"
+        },
+        {
+          "name": "Desayuno americano + jugo natural",
+          "price": "$164"
+        }
+      ]
+    },
+    {
+      "category": "Jugos Naturales (16 oz)",
+      "items": [
+        {
+          "name": "Tropical Oro",
+          "price": "$60",
+          "notes": "Mango, guayaba, limón y jengibre"
+        },
+        {
+          "name": "Ruby Fresh",
+          "price": "$60",
+          "notes": "Sandía, limón y menta"
+        },
+        {
+          "name": "Sunrise Rosa",
+          "price": "$60",
+          "notes": "Naranja, fresa y hierbabuena"
+        },
+        {
+          "name": "Green Fresh",
+          "price": "$60",
+          "notes": "Piña, pepino, limón y jengibre"
+        },
+        {
+          "name": "Verde Suave",
+          "price": "$65",
+          "notes": "Piña, espinaca y manzana verde"
+        },
+        {
+          "name": "Verde Clean",
+          "price": "$65",
+          "notes": "Pepino, apio, limón y manzana verde"
+        },
+        {
+          "subcategory": "Especial de la Casa",
+          "products": [
+            {
+              "name": "Fresco Tropical",
+              "price": "$70",
+              "notes": "Mango, piña, limón y jengibre"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Bebidas Frías",
+      "items": [
+        {
+          "name": "Coca-cola 600ml",
+          "price": "$35"
+        },
+        {
+          "name": "Sprite zero 355ml",
+          "price": "$25"
+        },
+        {
+          "name": "Mundet manzana 355ml",
+          "price": "$25"
+        },
+        {
+          "name": "Mirinda 355ml",
+          "price": "$25"
+        },
+        {
+          "name": "Manzanita sol 355ml",
+          "price": "$25"
+        },
+        {
+          "name": "Agua natural embotellada 500ml",
+          "price": "$20"
+        }
+      ]
+    },
+    {
+      "category": "Fríos de la Casa (16 oz)",
+      "items": [
+        {
+          "name": "Iced americano",
+          "price": "$70"
+        },
+        {
+          "name": "Iced mocaccino",
+          "price": "$70"
+        },
+        {
+          "name": "Iced cappuccino",
+          "price": "$70"
+        },
+        {
+          "name": "Iced chocolate",
+          "price": "$70"
+        },
+        {
+          "name": "Iced latte",
+          "price": "$70"
+        },
+        {
+          "name": "Piña tónica",
+          "price": "$70"
+        },
+        {
+          "name": "Orange coffee",
+          "price": "$70"
+        },
+        {
+          "name": "Limonade coffee",
+          "price": "$70"
+        }
+      ]
     }
-    return `<div class="menu-list">${productRow(item)}</div>`;
-  }).join("");
-
-  return `
-    <div class="menu-category reveal" id="cat-${id}" data-cat="${id}">
-      <span class="eyebrow">Menú</span>
-      <h2>${cat.category}</h2>
-      ${blocks}
-    </div>`;
+  ]
 }
-
-function observeReveal(){
-  const els = document.querySelectorAll(".reveal:not(.is-visible)");
-  if (!("IntersectionObserver" in window)){
-    els.forEach(el => el.classList.add("is-visible"));
-    return;
-  }
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting){
-        entry.target.classList.add("is-visible");
-        io.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1, rootMargin: "0px 0px -40px 0px" });
-  els.forEach(el => io.observe(el));
-}
-
-function setupSearch(){
-  if (!searchInput) return;
-  searchInput.addEventListener("input", () => {
-    const q = searchInput.value.trim().toLowerCase();
-    const rows = document.querySelectorAll(".menu-row");
-    const cats = document.querySelectorAll(".menu-category");
-
-    rows.forEach(row => {
-      row.style.display = !q || row.dataset.search.includes(q) ? "" : "none";
-    });
-
-    cats.forEach(cat => {
-      const visibleRows = cat.querySelectorAll('.menu-row:not([style*="display: none"])');
-      cat.style.display = q && visibleRows.length === 0 ? "none" : "";
-    });
-  });
-}
-
-(async function init(){
-  try{
-    const data = await loadMenu();
-    const categories = data.categories || [];
-    listEl.innerHTML = categories.map(renderCategory).join("");
-    observeReveal();
-    setupSearch();
-  } catch(err){
-    console.error(err);
-    listEl.innerHTML = `<p class="menu-empty">No pudimos cargar el menú en este momento. Intenta de nuevo más tarde.</p>`;
-  }
-})();
